@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "digimon.h": "c",
+        "debugscreen.h": "c",
+        "stdio.h": "c",
+        "ascii_m.h": "c"
+    }
+}

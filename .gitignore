@@ -1,0 +1,7 @@
+build/
+CMakeFiles/
+out/
+*.self
+*.self.out
+*.vpk_param.sfo
+*.vpk.out

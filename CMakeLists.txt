@@ -52,7 +52,6 @@ link_directories(
 add_executable(${PROJECT_NAME}
   src/main.c
   src/models/digimon.c
-  src/save_mappings/digimon_m.c
   src/save_mappings/ascii_m.c
   src/save_mappings/item_m.c
   common/debugScreen.c

@@ -5,3 +5,4 @@ out/
 *.self.out
 *.vpk_param.sfo
 *.vpk.out
+*.velf

@@ -108,8 +108,84 @@ const char* getEvolutionNameStrings(const Digimon* digimon) {
     return result;
 }
 
-void 
-initDigimon(
+DigimonMapping digimonMap[61] = {
+    {0x01, &botamon},
+    {0x02, &koromon},
+    {0x03, &agumon},
+    {0x04, &betamon},
+    {0x05, &greymon},
+    {0x06, &devimon},
+    {0x07, &airdramon},
+    {0x08, &tyrannomon},
+    {0x09, &meramon},
+    {0x0A, &seadramon},
+    {0x0B, &numemon},
+    {0x0C, &metalgreymon},
+    {0x0D, &mamemon},
+    {0x0E, &monzaemon},
+    {0x0F, &punimon},
+    {0x10, &tsunomon},
+    {0x11, &gabumon},
+    {0x12, &elecmon},
+    {0x13, &kabuterimon},
+    {0x14, &angemon},
+    {0x15, &birdramon},
+    {0x16, &garurumon},
+    {0x17, &frigimon},
+    {0x18, &whamon},
+    {0x19, &vegiemon},
+    {0x1A, &skullgreymon},
+    {0x1B, &metalmamemon},
+    {0x1C, &vademon},
+    {0x1D, &poyomon},
+    {0x1E, &tokomon},
+    {0x1F, &patamon},
+    {0x20, &kunemon},
+    {0x21, &unimon},
+    {0x22, &ogremon},
+    {0x23, &shellmon},
+    {0x24, &centarumon},
+    {0x25, &bakemon},
+    {0x26, &drimogemon},
+    {0x27, &sukamon},
+    {0x28, &andromon},
+    {0x29, &giromon},
+    {0x2A, &etemon},
+    {0x2B, &yuramon},
+    {0x2C, &tanemon},
+    {0x2D, &biyomon},
+    {0x2E, &palmon},
+    {0x2F, &monochromon},
+    {0x30, &leomon},
+    {0x31, &coelamon},
+    {0x32, &kokatorimon},
+    {0x33, &kuwagamon},
+    {0x34, &mojyamon},
+    {0x35, &nanimon},
+    {0x36, &megadramon},
+    {0x37, &piximon},
+    {0x38, &digitamamon},
+    {0x39, &penguinmon},
+    {0x3A, &ninjamon},
+    {0x3B, &phoenixmon},
+    {0x3C, &hkabuterimon},
+    {0x3D, &megaseadramon}
+};
+
+const int DIGIMON_MAPPING_SIZE = sizeof(digimonMap) / sizeof(DigimonMapping);
+
+char* getNameFromByteId(unsigned int searchId) {
+    const char* digimonName = "Unknown";
+    for (int i = 0; i < DIGIMON_MAPPING_SIZE; i++) {
+        if (digimonMap[i].searchId == searchId) {
+            digimonName = digimonMap[i].digimon->name;
+            break;
+        }
+    }
+    return (char*)digimonName;
+}
+
+void initDigimon(
     Digimon* digimon,
     char* name,
     Stage stage,

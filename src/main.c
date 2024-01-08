@@ -3,16 +3,16 @@
 #include <psp2/kernel/processmgr.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include "debugScreen.h"
 #include "models/digimon.h"
-#include "save_mappings/digimon_m.h"
 #include "save_mappings/ascii_m.h"
 #include "save_mappings/item_m.h"
 
 #define printf psvDebugScreenPrintf
 #define OFFSET 0x2080
-#define BUFFER_SIZE 18
+#define BUFFER_SIZE 4
 #define LINE_BYTES_LENGTH 16
 #define MAX_MAPPING 256 // Assuming 1-byte values
 
@@ -20,90 +20,28 @@
 #define CUSTOM_BG_RED   0x3F0000  // "dark" red
 #define CUSTOM_BG_GREEN 0x003F00  // "dark" green
 
-extern Digimon botamon;
-extern Digimon poyomon;
-extern Digimon punimon;
-extern Digimon yuramon;
-extern Digimon koromon;
-extern Digimon tanemon;
-extern Digimon tokomon;
-extern Digimon tsunomon;
-extern Digimon agumon;
-extern Digimon betamon;
-extern Digimon biyomon;
-extern Digimon elecmon;
-extern Digimon gabumon;
-extern Digimon kunemon;
-extern Digimon palmon;
-extern Digimon patamon;
-extern Digimon penguinmon;
-extern Digimon airdramon;
-extern Digimon angemon;
-extern Digimon bakemon;
-extern Digimon birdramon;
-extern Digimon centarumon;
-extern Digimon coelamon;
-extern Digimon devimon;
-extern Digimon drimogemon;
-extern Digimon frigimon;
-extern Digimon garurumon;
-extern Digimon greymon;
-extern Digimon kabuterimon;
-extern Digimon kokatorimon;
-extern Digimon kuwagamon;
-extern Digimon leomon;
-extern Digimon meramon;
-extern Digimon mojyamon;
-extern Digimon monochromon;
-extern Digimon nanimon;
-extern Digimon ninjamon;
-extern Digimon numemon;
-extern Digimon ogremon;
-extern Digimon seadramon;
-extern Digimon shellmon;
-extern Digimon sukamon;
-extern Digimon tyrannomon;
-extern Digimon unimon;
-extern Digimon vegiemon;
-extern Digimon whamon;
-extern Digimon andromon;
-extern Digimon digitamamon;
-extern Digimon etemon;
-extern Digimon giromon;
-extern Digimon hkabuterimon;
-extern Digimon mamemon;
-extern Digimon megadramon;
-extern Digimon megaseadramon;
-extern Digimon metalgreymon;
-extern Digimon metalmamemon;
-extern Digimon monzaemon;
-extern Digimon phoenixmon;
-extern Digimon piximon;
-extern Digimon skullgreymon;
-extern Digimon vademon;
-
-void printDigimonStats(Digimon digimon) {
+void printDigimonStats(Digimon* digimon) {
     // Print all of botamon's data
-    printf("%s\n\n", digimon.name);
+    printf("%s\n\n", digimon->name);
 
-    printf("HP: %i\n", digimon.req.hp);
-    printf("Attack: %i\n", digimon.req.offense);
-    printf("Defense: %i\n", digimon.req.defense);
-    printf("Speed: %i\n", digimon.req.speed);
-    printf("Brains: %i\n", digimon.req.brains);
-    printf("Care: %i\n", digimon.req.care);
-    printf("Weight: %i\n", digimon.req.weight);
-    printf("Discipline: %i\n", digimon.req.discipline);
-    printf("Happiness: %i\n\n", digimon.req.happiness);
-    printf("Battles: %i\n", digimon.req.battles);
-    printf("Tech: %i\n\n", digimon.req.techs);
-    printf("MinCare: %i\n", digimon.req.minCare);
-    printf("MinBattles: %i\n\n", digimon.req.minBattles);
+    printf("HP: %i\n", digimon->req.hp);
+    printf("Attack: %i\n", digimon->req.offense);
+    printf("Defense: %i\n", digimon->req.defense);
+    printf("Speed: %i\n", digimon->req.speed);
+    printf("Brains: %i\n", digimon->req.brains);
+    printf("Care: %i\n", digimon->req.care);
+    printf("Weight: %i\n", digimon->req.weight);
+    printf("Discipline: %i\n", digimon->req.discipline);
+    printf("Happiness: %i\n\n", digimon->req.happiness);
+    printf("Battles: %i\n", digimon->req.battles);
+    printf("Tech: %i\n\n", digimon->req.techs);
+    printf("MinCare: %i\n", digimon->req.minCare);
+    printf("MinBattles: %i\n\n", digimon->req.minBattles);
 
-    printf("%d evolutions: %s\n\n", digimon.evolutionPathSize, getEvolutionNameStrings(&digimon));
+    printf("%d evolutions: %s\n\n", digimon->evolutionPathSize, getEvolutionNameStrings(digimon));
 
-    if (digimon.digimonBonus) {
-        printf("Bonus digimon: %s", digimon.digimonBonus->name);
+    if (digimon->digimonBonus != NULL) {
+        printf("Bonus digimon: %s", digimon->digimonBonus->name);
     }
 }
 
@@ -114,7 +52,7 @@ int main() {
 
     // TODO: Make this configurable
 	char path[] = "ux0:/pspemu/PSP/SAVEDATA/SLUS01032/SCEVMC0.VMP";
-	unsigned char buffer[BUFFER_SIZE];
+	unsigned char buffer[1];
 
     // --- LOAD FONT AND DEBUG SCREEN STUFF ---
 	psvDebugScreenInit();
@@ -134,7 +72,7 @@ int main() {
 		}
 	}
 
-	printf("Fippi's Digimon Slots for Vita!\n");
+	printf("Fippi's Digimon Slots for Vita!\n\n");
 
     // Open the file 
     SceUID fh = sceIoOpen( path, SCE_O_RDONLY, 0777 );
@@ -144,7 +82,8 @@ int main() {
         return -1;
     }
 
-    printf("Read PS1 save file successfully\n");
+    printf("Read PS1 save file successfully from:\n");
+    printf(path);
     printf("\n\n");
 
 	// Go to the start of the PS1 save (0x2080) inside the PSP savedata
@@ -162,7 +101,7 @@ int main() {
     // }
     
     // pull 19 bytes
-    if (sceIoPread(fh, buffer, sizeof(buffer), 0x2080 + 0x0667) < 0) {
+    if (sceIoPread(fh, buffer, sizeof(buffer), 0x2080 + 0x03B8) < 0) {
         printf("Failed to read data from file\n");
 		sceKernelDelayThread(5*1000000); // Wait for 3 seconds
         return -1;
@@ -170,6 +109,21 @@ int main() {
 
 	// Close the file
     sceIoClose(fh);
+
+    printf("Current digimon has ID [0x%X]:\n", buffer[0]);
+
+    // Convert the string to an integer
+    Digimon* digi = NULL;
+    for (int i = 0; i < DIGIMON_MAPPING_SIZE; i++) {
+        if (digimonMap[i].searchId == buffer[0]) {
+            digi = digimonMap[i].digimon;
+            break;
+        }
+    }
+
+    if (digi == NULL) {
+        printf("Failed to fetch digimon with ID: 0x%X\n", buffer[0]);
+    }
 
     // Print the bytes in hexadecimal format
     // printf("Tamer Name (bytes):\n");
@@ -198,7 +152,7 @@ int main() {
 
     initialiseDigimon();
     
-    printDigimonStats(shellmon);
+    printDigimonStats(digi);
 
 	return sceKernelDelayThread(~0);
 }

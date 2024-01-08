@@ -270,33 +270,6 @@ src/save_mappings/ascii_m.c.s:
 	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/ascii_m.c.s
 .PHONY : src/save_mappings/ascii_m.c.s
 
-src/save_mappings/digimon_m.obj: src/save_mappings/digimon_m.c.obj
-
-.PHONY : src/save_mappings/digimon_m.obj
-
-# target to build an object file
-src/save_mappings/digimon_m.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/digimon_m.c.obj
-.PHONY : src/save_mappings/digimon_m.c.obj
-
-src/save_mappings/digimon_m.i: src/save_mappings/digimon_m.c.i
-
-.PHONY : src/save_mappings/digimon_m.i
-
-# target to preprocess a source file
-src/save_mappings/digimon_m.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/digimon_m.c.i
-.PHONY : src/save_mappings/digimon_m.c.i
-
-src/save_mappings/digimon_m.s: src/save_mappings/digimon_m.c.s
-
-.PHONY : src/save_mappings/digimon_m.s
-
-# target to generate assembly for a file
-src/save_mappings/digimon_m.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/digimon_m.c.s
-.PHONY : src/save_mappings/digimon_m.c.s
-
 src/save_mappings/item_m.obj: src/save_mappings/item_m.c.obj
 
 .PHONY : src/save_mappings/item_m.obj
@@ -348,9 +321,6 @@ help:
 	@echo "... src/save_mappings/ascii_m.obj"
 	@echo "... src/save_mappings/ascii_m.i"
 	@echo "... src/save_mappings/ascii_m.s"
-	@echo "... src/save_mappings/digimon_m.obj"
-	@echo "... src/save_mappings/digimon_m.i"
-	@echo "... src/save_mappings/digimon_m.s"
 	@echo "... src/save_mappings/item_m.obj"
 	@echo "... src/save_mappings/item_m.i"
 	@echo "... src/save_mappings/item_m.s"

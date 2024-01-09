@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /mnt/d/git/digislots-vita
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,56 +111,56 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named hello_world.vpk
+# Target rules for targets named digislots_vita.vpk
 
 # Build rule for target.
-hello_world.vpk: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world.vpk
-.PHONY : hello_world.vpk
+digislots_vita.vpk: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 digislots_vita.vpk
+.PHONY : digislots_vita.vpk
 
 # fast build rule for target.
-hello_world.vpk/fast:
-	$(MAKE) -f CMakeFiles/hello_world.vpk.dir/build.make CMakeFiles/hello_world.vpk.dir/build
-.PHONY : hello_world.vpk/fast
+digislots_vita.vpk/fast:
+	$(MAKE) -f CMakeFiles/digislots_vita.vpk.dir/build.make CMakeFiles/digislots_vita.vpk.dir/build
+.PHONY : digislots_vita.vpk/fast
 
 #=============================================================================
-# Target rules for targets named hello_world.self
+# Target rules for targets named digislots_vita.self
 
 # Build rule for target.
-hello_world.self: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world.self
-.PHONY : hello_world.self
+digislots_vita.self: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 digislots_vita.self
+.PHONY : digislots_vita.self
 
 # fast build rule for target.
-hello_world.self/fast:
-	$(MAKE) -f CMakeFiles/hello_world.self.dir/build.make CMakeFiles/hello_world.self.dir/build
-.PHONY : hello_world.self/fast
+digislots_vita.self/fast:
+	$(MAKE) -f CMakeFiles/digislots_vita.self.dir/build.make CMakeFiles/digislots_vita.self.dir/build
+.PHONY : digislots_vita.self/fast
 
 #=============================================================================
-# Target rules for targets named hello_world-velf
+# Target rules for targets named digislots_vita-velf
 
 # Build rule for target.
-hello_world-velf: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world-velf
-.PHONY : hello_world-velf
+digislots_vita-velf: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 digislots_vita-velf
+.PHONY : digislots_vita-velf
 
 # fast build rule for target.
-hello_world-velf/fast:
-	$(MAKE) -f CMakeFiles/hello_world-velf.dir/build.make CMakeFiles/hello_world-velf.dir/build
-.PHONY : hello_world-velf/fast
+digislots_vita-velf/fast:
+	$(MAKE) -f CMakeFiles/digislots_vita-velf.dir/build.make CMakeFiles/digislots_vita-velf.dir/build
+.PHONY : digislots_vita-velf/fast
 
 #=============================================================================
-# Target rules for targets named hello_world
+# Target rules for targets named digislots_vita
 
 # Build rule for target.
-hello_world: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hello_world
-.PHONY : hello_world
+digislots_vita: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 digislots_vita
+.PHONY : digislots_vita
 
 # fast build rule for target.
-hello_world/fast:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/build
-.PHONY : hello_world/fast
+digislots_vita/fast:
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/build
+.PHONY : digislots_vita/fast
 
 common/debugScreen.obj: common/debugScreen.c.obj
 
@@ -168,7 +168,7 @@ common/debugScreen.obj: common/debugScreen.c.obj
 
 # target to build an object file
 common/debugScreen.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/common/debugScreen.c.obj
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/common/debugScreen.c.obj
 .PHONY : common/debugScreen.c.obj
 
 common/debugScreen.i: common/debugScreen.c.i
@@ -177,7 +177,7 @@ common/debugScreen.i: common/debugScreen.c.i
 
 # target to preprocess a source file
 common/debugScreen.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/common/debugScreen.c.i
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/common/debugScreen.c.i
 .PHONY : common/debugScreen.c.i
 
 common/debugScreen.s: common/debugScreen.c.s
@@ -186,7 +186,7 @@ common/debugScreen.s: common/debugScreen.c.s
 
 # target to generate assembly for a file
 common/debugScreen.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/common/debugScreen.c.s
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/common/debugScreen.c.s
 .PHONY : common/debugScreen.c.s
 
 src/main.obj: src/main.c.obj
@@ -195,7 +195,7 @@ src/main.obj: src/main.c.obj
 
 # target to build an object file
 src/main.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/main.c.obj
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/main.c.obj
 .PHONY : src/main.c.obj
 
 src/main.i: src/main.c.i
@@ -204,7 +204,7 @@ src/main.i: src/main.c.i
 
 # target to preprocess a source file
 src/main.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/main.c.i
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/main.c.i
 .PHONY : src/main.c.i
 
 src/main.s: src/main.c.s
@@ -213,7 +213,7 @@ src/main.s: src/main.c.s
 
 # target to generate assembly for a file
 src/main.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/main.c.s
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/main.c.s
 .PHONY : src/main.c.s
 
 src/models/digimon.obj: src/models/digimon.c.obj
@@ -222,7 +222,7 @@ src/models/digimon.obj: src/models/digimon.c.obj
 
 # target to build an object file
 src/models/digimon.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/models/digimon.c.obj
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/models/digimon.c.obj
 .PHONY : src/models/digimon.c.obj
 
 src/models/digimon.i: src/models/digimon.c.i
@@ -231,7 +231,7 @@ src/models/digimon.i: src/models/digimon.c.i
 
 # target to preprocess a source file
 src/models/digimon.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/models/digimon.c.i
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/models/digimon.c.i
 .PHONY : src/models/digimon.c.i
 
 src/models/digimon.s: src/models/digimon.c.s
@@ -240,7 +240,7 @@ src/models/digimon.s: src/models/digimon.c.s
 
 # target to generate assembly for a file
 src/models/digimon.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/models/digimon.c.s
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/models/digimon.c.s
 .PHONY : src/models/digimon.c.s
 
 src/save_mappings/ascii_m.obj: src/save_mappings/ascii_m.c.obj
@@ -249,7 +249,7 @@ src/save_mappings/ascii_m.obj: src/save_mappings/ascii_m.c.obj
 
 # target to build an object file
 src/save_mappings/ascii_m.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/ascii_m.c.obj
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/save_mappings/ascii_m.c.obj
 .PHONY : src/save_mappings/ascii_m.c.obj
 
 src/save_mappings/ascii_m.i: src/save_mappings/ascii_m.c.i
@@ -258,7 +258,7 @@ src/save_mappings/ascii_m.i: src/save_mappings/ascii_m.c.i
 
 # target to preprocess a source file
 src/save_mappings/ascii_m.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/ascii_m.c.i
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/save_mappings/ascii_m.c.i
 .PHONY : src/save_mappings/ascii_m.c.i
 
 src/save_mappings/ascii_m.s: src/save_mappings/ascii_m.c.s
@@ -267,7 +267,7 @@ src/save_mappings/ascii_m.s: src/save_mappings/ascii_m.c.s
 
 # target to generate assembly for a file
 src/save_mappings/ascii_m.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/ascii_m.c.s
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/save_mappings/ascii_m.c.s
 .PHONY : src/save_mappings/ascii_m.c.s
 
 src/save_mappings/item_m.obj: src/save_mappings/item_m.c.obj
@@ -276,7 +276,7 @@ src/save_mappings/item_m.obj: src/save_mappings/item_m.c.obj
 
 # target to build an object file
 src/save_mappings/item_m.c.obj:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/item_m.c.obj
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/save_mappings/item_m.c.obj
 .PHONY : src/save_mappings/item_m.c.obj
 
 src/save_mappings/item_m.i: src/save_mappings/item_m.c.i
@@ -285,7 +285,7 @@ src/save_mappings/item_m.i: src/save_mappings/item_m.c.i
 
 # target to preprocess a source file
 src/save_mappings/item_m.c.i:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/item_m.c.i
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/save_mappings/item_m.c.i
 .PHONY : src/save_mappings/item_m.c.i
 
 src/save_mappings/item_m.s: src/save_mappings/item_m.c.s
@@ -294,7 +294,7 @@ src/save_mappings/item_m.s: src/save_mappings/item_m.c.s
 
 # target to generate assembly for a file
 src/save_mappings/item_m.c.s:
-	$(MAKE) -f CMakeFiles/hello_world.dir/build.make CMakeFiles/hello_world.dir/src/save_mappings/item_m.c.s
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/save_mappings/item_m.c.s
 .PHONY : src/save_mappings/item_m.c.s
 
 # Help Target
@@ -303,12 +303,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... hello_world.vpk"
-	@echo "... hello_world.self"
-	@echo "... hello_world-velf"
-	@echo "... hello_world"
+	@echo "... digislots_vita.vpk"
+	@echo "... rebuild_cache"
+	@echo "... digislots_vita.self"
+	@echo "... digislots_vita-velf"
+	@echo "... digislots_vita"
 	@echo "... common/debugScreen.obj"
 	@echo "... common/debugScreen.i"
 	@echo "... common/debugScreen.s"

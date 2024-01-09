@@ -54,6 +54,7 @@ add_executable(${PROJECT_NAME}
   src/models/digimon.c
   src/save_mappings/ascii_m.c
   src/save_mappings/item_m.c
+  src/offsets.c
   common/debugScreen.c
 )
 

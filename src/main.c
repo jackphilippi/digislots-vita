@@ -5,15 +5,15 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "offsets.h"
 #include "debugScreen.h"
 #include "models/digimon.h"
 #include "save_mappings/ascii_m.h"
 #include "save_mappings/item_m.h"
 
 #define printf psvDebugScreenPrintf
-#define OFFSET 0x2080
-#define BUFFER_SIZE 4
-#define LINE_BYTES_LENGTH 16
+#define BUFFER_SIZE 8192 // 0x2000
+#define LINE_BYTES_LENGTH 32
 #define MAX_MAPPING 256 // Assuming 1-byte values
 
 #define CUSTOM_BG_BLUE  0x00003F  // "dark" blue
@@ -24,19 +24,32 @@ void printDigimonStats(Digimon* digimon) {
     // Print all of botamon's data
     printf("%s\n\n", digimon->name);
 
-    printf("HP: %i\n", digimon->req.hp);
-    printf("Attack: %i\n", digimon->req.offense);
-    printf("Defense: %i\n", digimon->req.defense);
-    printf("Speed: %i\n", digimon->req.speed);
-    printf("Brains: %i\n", digimon->req.brains);
-    printf("Care: %i\n", digimon->req.care);
-    printf("Weight: %i\n", digimon->req.weight);
-    printf("Discipline: %i\n", digimon->req.discipline);
-    printf("Happiness: %i\n\n", digimon->req.happiness);
-    printf("Battles: %i\n", digimon->req.battles);
-    printf("Tech: %i\n\n", digimon->req.techs);
-    printf("MinCare: %i\n", digimon->req.minCare);
-    printf("MinBattles: %i\n\n", digimon->req.minBattles);
+    // printf("HP: %i\n", digimon->req.hp);
+    // printf("Attack: %i\n", digimon->req.offense);
+    // printf("Defense: %i\n", digimon->req.defense);
+    // printf("Speed: %i\n", digimon->req.speed);
+    // printf("Brains: %i\n", digimon->req.brains);
+    // printf("Care: %i\n", digimon->req.care);
+    // printf("Weight: %i\n", digimon->req.weight);
+    // printf("Discipline: %i\n", digimon->req.discipline);
+    // printf("Happiness: %i\n\n", digimon->req.happiness);
+    // printf("Battles: %i\n", digimon->req.battles);
+    // printf("Tech: %i\n\n", digimon->req.techs);
+    // printf("MinCare: %i\n", digimon->req.minCare);
+    // printf("MinBattles: %i\n\n", digimon->req.minBattles);
+
+    printf("HP: %d\n", digimon->stats.hp);
+    printf("MP: %d\n", digimon->stats.mp);
+    printf("Offense: %d\n", digimon->stats.offense);
+    printf("Defense: %d\n", digimon->stats.defense);
+    printf("Speed: %d\n", digimon->stats.speed);
+    printf("Brains: %d\n", digimon->stats.brains);
+    printf("Care: %d\n", digimon->stats.care);
+    printf("Weight: %d\n", digimon->stats.weight);
+    printf("Discipline: %d\n", digimon->stats.discipline);
+    printf("Happiness: %d\n\n", digimon->stats.happiness);
+    printf("Battles: %d\n", digimon->stats.battles);
+    printf("Tech: %d\n\n", digimon->stats.techs);
 
     printf("%d evolutions: %s\n\n", digimon->evolutionPathSize, getEvolutionNameStrings(digimon));
 
@@ -52,10 +65,11 @@ int main() {
 
     // TODO: Make this configurable
 	char path[] = "ux0:/pspemu/PSP/SAVEDATA/SLUS01032/SCEVMC0.VMP";
-	unsigned char buffer[1];
+	unsigned char buffer[BUFFER_SIZE];
 
     // --- LOAD FONT AND DEBUG SCREEN STUFF ---
 	psvDebugScreenInit();
+    
     // get default font
 	psvDebugScreenFont_default_1x = psvDebugScreenGetFont();
 	// create a scaled by 2 version of default font
@@ -85,23 +99,9 @@ int main() {
     printf("Read PS1 save file successfully from:\n");
     printf(path);
     printf("\n\n");
-
-	// Go to the start of the PS1 save (0x2080) inside the PSP savedata
-    if (sceIoLseek(fh, OFFSET, SCE_SEEK_SET) != OFFSET) {
-        printf("Failed to seek to offset 0x%X\n", OFFSET);
-		sceKernelDelayThread(5*1000000); // Wait for 3 seconds
-        return -1;
-    }
-
-	// Go to the location of the Tamer Name (0x0667), offset from 0x2080
-    // if (sceIoLseek(fh, 0x0667, SCE_SEEK_CUR) != OFFSET+0x0667) {
-    //     printf("Failed to seek to offset a second time 0x%X\n", 0x0667);
-	// 	sceKernelDelayThread(5*1000000); // Wait for 3 seconds
-    //     return -1;
-    // }
     
-    // pull 19 bytes
-    if (sceIoPread(fh, buffer, sizeof(buffer), 0x2080 + 0x03B8) < 0) {
+    // put the PS1 save into our buffer
+    if (sceIoPread(fh, buffer, BUFFER_SIZE, OFS_PS1_SAVE_START) < 0) {
         printf("Failed to read data from file\n");
 		sceKernelDelayThread(5*1000000); // Wait for 3 seconds
         return -1;
@@ -110,20 +110,60 @@ int main() {
 	// Close the file
     sceIoClose(fh);
 
-    printf("Current digimon has ID [0x%X]:\n", buffer[0]);
+    unsigned int digiSearchId = buffer[OFS_DIGIMON_TYPE];
+    printf("\e[31mCurrent digimon has ID [0x%X]:\e[39;49m\n", digiSearchId);
 
     // Convert the string to an integer
     Digimon* digi = NULL;
     for (int i = 0; i < DIGIMON_MAPPING_SIZE; i++) {
-        if (digimonMap[i].searchId == buffer[0]) {
+        if (digimonMap[i].searchId == digiSearchId) {
             digi = digimonMap[i].digimon;
             break;
         }
     }
 
     if (digi == NULL) {
-        printf("Failed to fetch digimon with ID: 0x%X\n", buffer[0]);
+        printf("ERROR: Failed to find a digimon with ID: 0x%X\n", digiSearchId);
+    	return sceKernelDelayThread(~0);
     }
+
+    int getStatValue(int highByte, int lowByte) {
+        return buffer[OFS_DIGIMON_STATS + highByte] + (buffer[OFS_DIGIMON_STATS + lowByte] << 8);
+    }
+
+    int getPartnerValue(int highByte, int lowByte) {
+        return buffer[OFS_DIGIMON_PARTNER_STATS + highByte] + (buffer[OFS_DIGIMON_PARTNER_STATS + lowByte] << 8);
+    }
+
+    DigimonStats ds = {
+        // Come from 0x0470
+        .offense = getStatValue(0x00, 0x01),
+        .defense = getStatValue(0x02, 0x03),
+        .speed = getStatValue(0x04, 0x05),
+        .brains = getStatValue(0x06, 0x07),
+        .techs = getStatValue(0x0C, 0x0D), // TODO: Decode the bit field for techs
+        .hp = getStatValue(0x10, 0x11),
+        .mp = getStatValue(0x12, 0x13),
+
+        // Come from 0x03E0
+        .care = getPartnerValue(0x52, 0x53),
+        .weight = getPartnerValue(0x42, 0x43),
+        .discipline = getPartnerValue(0x28, 0x29),
+        .happiness = getPartnerValue(0x2A, 0x2B),
+        .battles = getPartnerValue(0x54, 0x55),
+    };
+
+    digi->stats = ds;
+
+    // Print first x chars of buffer
+    // for (int i = OFS_DIGIMON_TYPE_START; i < 2000; i++) {
+    //     if (i%LINE_BYTES_LENGTH == 0) {
+    //         printf("\n");
+    //         printf("%-5X", i);
+    //     }
+    //     printf("%02X ", buffer[i]);
+    // }
+    // printf("\n");
 
     // Print the bytes in hexadecimal format
     // printf("Tamer Name (bytes):\n");

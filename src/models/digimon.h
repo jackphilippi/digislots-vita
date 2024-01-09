@@ -15,7 +15,6 @@ typedef enum {
     Virus
 } Type;
 
-// Struct equivalent of EvolutionRequirements class
 typedef struct {
     int hp;
     int mp;
@@ -32,6 +31,21 @@ typedef struct {
     bool minCare;
     bool minBattles;
 } EvolutionRequirements;
+
+typedef struct {
+    int hp;
+    int mp;
+    int offense;
+    int defense;
+    int speed;
+    int brains;
+    int care;
+    int weight;
+    int discipline;
+    int happiness;
+    int battles;
+    int techs;
+} DigimonStats;
 
 typedef struct Digimon Digimon; // forward reference
 
@@ -56,6 +70,7 @@ typedef struct Digimon {
     Digimon** evolutionPath; // Array of pointers to Digimon
     int evolutionPathSize;
     Digimon* digimonBonus; // Optional, can be NULL
+    DigimonStats stats;
 } Digimon;
 
 void initialiseDigimon();

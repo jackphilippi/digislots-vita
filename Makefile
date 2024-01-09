@@ -243,6 +243,33 @@ src/models/digimon.c.s:
 	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/models/digimon.c.s
 .PHONY : src/models/digimon.c.s
 
+src/offsets.obj: src/offsets.c.obj
+
+.PHONY : src/offsets.obj
+
+# target to build an object file
+src/offsets.c.obj:
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/offsets.c.obj
+.PHONY : src/offsets.c.obj
+
+src/offsets.i: src/offsets.c.i
+
+.PHONY : src/offsets.i
+
+# target to preprocess a source file
+src/offsets.c.i:
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/offsets.c.i
+.PHONY : src/offsets.c.i
+
+src/offsets.s: src/offsets.c.s
+
+.PHONY : src/offsets.s
+
+# target to generate assembly for a file
+src/offsets.c.s:
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/offsets.c.s
+.PHONY : src/offsets.c.s
+
 src/save_mappings/ascii_m.obj: src/save_mappings/ascii_m.c.obj
 
 .PHONY : src/save_mappings/ascii_m.obj
@@ -318,6 +345,9 @@ help:
 	@echo "... src/models/digimon.obj"
 	@echo "... src/models/digimon.i"
 	@echo "... src/models/digimon.s"
+	@echo "... src/offsets.obj"
+	@echo "... src/offsets.i"
+	@echo "... src/offsets.s"
 	@echo "... src/save_mappings/ascii_m.obj"
 	@echo "... src/save_mappings/ascii_m.i"
 	@echo "... src/save_mappings/ascii_m.s"

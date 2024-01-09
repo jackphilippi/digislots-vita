@@ -147,7 +147,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=hello_world
+CMAKE_PROJECT_NAME:STATIC=digislots_vita
 
 //ranlib
 CMAKE_RANLIB:PATH=/usr/local/vitasdk/bin/arm-vita-eabi-ranlib
@@ -248,6 +248,12 @@ VITA_PACK_VPK:PATH=/usr/local/vitasdk/bin/vita-pack-vpk
 
 //vita-pack-vpk flags
 VITA_PACK_VPK_FLAGS:STRING=
+
+//Value Computed by CMake
+digislots_vita_BINARY_DIR:STATIC=/mnt/d/git/digislots-vita
+
+//Value Computed by CMake
+digislots_vita_SOURCE_DIR:STATIC=/mnt/d/git/digislots-vita
 
 //Value Computed by CMake
 hello_world_BINARY_DIR:STATIC=/mnt/d/git/digislots-vita

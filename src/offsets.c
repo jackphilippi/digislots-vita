@@ -17,3 +17,4 @@ const unsigned int OFS_DIGIMON_STATS = 0x0470;
 const unsigned int OFS_DIGIMON_STATS_END = 0x048F;
 const unsigned int OFS_DIGIMON_PARTNER_STATS = 0x03E0;
 const unsigned int OFS_DIGIMON_PARTNER_STATS_END = 0x0463;
+const unsigned int OFS_HAPPINESS = 0x03E0 + 0x2A;

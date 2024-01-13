@@ -58,9 +58,6 @@ extern DigimonMapping digimonMap[];
 
 extern const int DIGIMON_MAPPING_SIZE;
 
-char* getNameFromByteId(unsigned int searchId);
-
-
 // Struct equivalent of Digimon class
 typedef struct Digimon {
     char* name;
@@ -80,6 +77,27 @@ const char* getDigiStageString(Stage stage);
 const char* getDigiTypeString(Type type);
 
 const char* getEvolutionNameStrings(const Digimon* digimon);
+
+char* getNameFromByteId(unsigned int searchId);
+
+void printDigimonStats(Digimon* digimon);
+
+bool isSpecialEvolution(Digimon* digi);
+
+int getStatValue(int highByte, int lowByte, unsigned char* buffer);
+
+int getPartnerValue(int highByte, int lowByte, unsigned char* buffer);
+
+Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer);
+
+/**
+ * Retrieves each of the stat values from the buffer
+ * which contains the PS1 save file.
+ * 
+ * @param digi - the digimon to update with the stats
+ * @param buffer - the buffer containing the PS1 save file
+*/
+Digimon* getRandomEvolution(Digimon* digi);
 
 extern Digimon botamon;
 extern Digimon poyomon;

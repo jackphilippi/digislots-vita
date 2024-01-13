@@ -2,7 +2,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "digimon.h"
+#include "../screen.h"
+#include "../offsets.h"
 
 Digimon botamon;
 Digimon poyomon;
@@ -185,6 +188,99 @@ char* getNameFromByteId(unsigned int searchId) {
     return (char*)digimonName;
 }
 
+bool isSpecialEvolution(Digimon* digi) {
+    return strcmp(digi->name, "Sukamon") == 0 || strcmp(digi->name, "Numemon") == 0 || strcmp(digi->name, "Vademon") == 0;
+}
+
+int getStatValue(int highByte, int lowByte, unsigned char* buffer) {
+    return buffer[OFS_DIGIMON_STATS + highByte] + (buffer[OFS_DIGIMON_STATS + lowByte] << 8);
+}
+
+int getPartnerValue(int highByte, int lowByte, unsigned char* buffer) {
+    return buffer[OFS_DIGIMON_PARTNER_STATS + highByte] + (buffer[OFS_DIGIMON_PARTNER_STATS + lowByte] << 8);
+}
+
+Digimon* getRandomEvolution(Digimon* digi) {
+    // First remove any records that are special evolutions (TODO: make this configurable later)
+    Digimon* nonSpecial[digi->evolutionPathSize];
+    int filteredSize = 0;
+    for (int i = 0; i < digi->evolutionPathSize; i++) {
+        if (!isSpecialEvolution(digi->evolutionPath[i])) {
+            nonSpecial[filteredSize++] = digi->evolutionPath[i];
+        }
+    }
+
+    int randomNumber = rand() % filteredSize;
+    Digimon* randomDigi = nonSpecial[randomNumber];
+
+    if (randomDigi == NULL) {
+        print("No available evolutions.");
+        return NULL;
+    } else {
+        print("Picked random evolution: %s\n\n", randomDigi->name);
+        return randomDigi;
+    }
+}
+
+Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer) {
+    digi->stats = (DigimonStats){
+        // Come from 0x0470
+        .offense = getStatValue(0x00, 0x01, buffer),
+        .defense = getStatValue(0x02, 0x03, buffer),
+        .speed = getStatValue(0x04, 0x05, buffer),
+        .brains = getStatValue(0x06, 0x07, buffer),
+        // .techs = "TODO", // TODO: Decode the bit field for techs
+        .hp = getStatValue(0x10, 0x11, buffer),
+        .mp = getStatValue(0x12, 0x13, buffer),
+        // Come from 0x03E0
+        .care = getPartnerValue(0x52, 0x53, buffer),
+        .weight = getPartnerValue(0x42, 0x43, buffer),
+        .discipline = getPartnerValue(0x28, 0x29, buffer),
+        .happiness = buffer[OFS_HAPPINESS],
+        .battles = getPartnerValue(0x54, 0x55, buffer),
+    };
+}
+
+void printDigimonStats(Digimon* digimon) {
+    // Print all of botamon's data
+    print("%s\n\n", digimon->name);
+
+    // Show a digimon's evolution requirements
+    // print("HP: %i\n", digimon->req.hp);
+    // print("Attack: %i\n", digimon->req.offense);
+    // print("Defense: %i\n", digimon->req.defense);
+    // print("Speed: %i\n", digimon->req.speed);
+    // print("Brains: %i\n", digimon->req.brains);
+    // print("Care: %i\n", digimon->req.care);
+    // print("Weight: %i\n", digimon->req.weight);
+    // print("Discipline: %i\n", digimon->req.discipline);
+    // print("Happiness: %i\n\n", digimon->req.happiness);
+    // print("Battles: %i\n", digimon->req.battles);
+    // print("Tech: %i\n\n", digimon->req.techs);
+    // print("MinCare: %i\n", digimon->req.minCare);
+    // print("MinBattles: %i\n\n", digimon->req.minBattles);
+
+    // Show digimon's stats
+    print("HP: %d\n", digimon->stats.hp);
+    print("MP: %d\n", digimon->stats.mp);
+    print("Offense: %d\n", digimon->stats.offense);
+    print("Defense: %d\n", digimon->stats.defense);
+    print("Speed: %d\n", digimon->stats.speed);
+    print("Brains: %d\n", digimon->stats.brains);
+    print("Care: %d\n", digimon->stats.care);
+    print("Weight: %d\n", digimon->stats.weight);
+    print("Discipline: %d\n", digimon->stats.discipline);
+    print("Happiness: %d\n\n", digimon->stats.happiness);
+    print("Battles: %d\n", digimon->stats.battles);
+    print("Tech: TODO\n\n"); // , digimon->stats.techs);
+
+    print("%d evolutions: %s\n\n", digimon->evolutionPathSize, getEvolutionNameStrings(digimon));
+
+    if (digimon->digimonBonus != NULL) {
+        print("Bonus digimon: %s", digimon->digimonBonus->name);
+    }
+}
+
 void initDigimon(
     Digimon* digimon,
     char* name,
@@ -203,6 +299,8 @@ void initDigimon(
     digimon->evolutionPathSize = pathSize;
     digimon->digimonBonus = bonus;
 }
+
+const int NO_EVO = 0;
 
 void initialiseDigimon() {
     Digimon* botamonEvolutions[2] = { &koromon, &sukamon };
@@ -398,7 +496,7 @@ void initialiseDigimon() {
     initDigimon(&digitamamon, "Digitamamon", Ultimate, Data, digitamamonReq, digitamamonEvolutions, 1, 0);
 
     EvolutionRequirements etemonReq = { 2000, 3000, 400, 200, 400, 300, 0, 15, 0, 0, 50, 49, true, false };
-    initDigimon(&etemon, "Etemon", Ultimate, Virus, etemonReq, NULL, 0, 0);
+    initDigimon(&etemon, "Etemon", Ultimate, Virus, etemonReq, NULL, NO_EVO, 0);
 
     Digimon* giromonEvolutions[1] = { &sukamon };
     EvolutionRequirements giromonReq = { 0, 0, 400, 0, 300, 400, 15, 5, 0, 95, 100, 35, false, false };
@@ -443,8 +541,7 @@ void initialiseDigimon() {
     Digimon* skullgreymonEvolutions[1] = { &sukamon };
     EvolutionRequirements skullgreymonReq = { 4000, 6000, 400, 400, 200, 500, 10, 30, 0, 0, 40, 45, false, false };
     initDigimon(&skullgreymon, "SkullGreymon", Ultimate, Virus, skullgreymonReq, skullgreymonEvolutions, 1, 0);
-    
-    EvolutionRequirements vademonReq = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false };
-    initDigimon(&vademon, "Vademon", Ultimate, Virus, vademonReq, NULL, 0, 0);
 
+    EvolutionRequirements vademonReq = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false };
+    initDigimon(&vademon, "Vademon", Ultimate, Virus, vademonReq, NULL, NO_EVO, 0);
 }

@@ -324,6 +324,33 @@ src/save_mappings/item_m.c.s:
 	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/save_mappings/item_m.c.s
 .PHONY : src/save_mappings/item_m.c.s
 
+src/screen.obj: src/screen.c.obj
+
+.PHONY : src/screen.obj
+
+# target to build an object file
+src/screen.c.obj:
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/screen.c.obj
+.PHONY : src/screen.c.obj
+
+src/screen.i: src/screen.c.i
+
+.PHONY : src/screen.i
+
+# target to preprocess a source file
+src/screen.c.i:
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/screen.c.i
+.PHONY : src/screen.c.i
+
+src/screen.s: src/screen.c.s
+
+.PHONY : src/screen.s
+
+# target to generate assembly for a file
+src/screen.c.s:
+	$(MAKE) -f CMakeFiles/digislots_vita.dir/build.make CMakeFiles/digislots_vita.dir/src/screen.c.s
+.PHONY : src/screen.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -354,6 +381,9 @@ help:
 	@echo "... src/save_mappings/item_m.obj"
 	@echo "... src/save_mappings/item_m.i"
 	@echo "... src/save_mappings/item_m.s"
+	@echo "... src/screen.obj"
+	@echo "... src/screen.i"
+	@echo "... src/screen.s"
 .PHONY : help
 
 

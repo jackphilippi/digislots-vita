@@ -17,6 +17,8 @@ extern const unsigned int OFS_DIGIMON_STATS;
 extern const unsigned int OFS_DIGIMON_STATS_END;
 extern const unsigned int OFS_DIGIMON_PARTNER_STATS;
 extern const unsigned int OFS_DIGIMON_PARTNER_STATS_END;
+extern const unsigned int OFS_HAPPINESS;
+
 
     // 0x00 OffensS
     // 0x02 Defense

@@ -3,6 +3,26 @@
         "digimon.h": "c",
         "debugscreen.h": "c",
         "stdio.h": "c",
-        "ascii_m.h": "c"
-    }
+        "ascii_m.h": "c",
+        "stdlib.h": "c",
+        "offsets.h": "c",
+        "stdbool.h": "c",
+        "fcntl.h": "c",
+        "ctrl.h": "c",
+        "item_m.h": "c",
+        "screen.h": "c",
+        "vita2d.h": "c",
+        "string.h": "c",
+        "array": "c",
+        "deque": "c",
+        "list": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "valarray": "c",
+        "ranges": "c"
+    },
+    "cmake.configureOnOpen": false
 }

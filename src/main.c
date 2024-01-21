@@ -1,5 +1,6 @@
 #include <psp2/io/fcntl.h> // File control definitions
 #include <psp2/kernel/threadmgr.h>
+#include <psp2/sysmodule.h> 
 #include <psp2/kernel/processmgr.h>
 #include <psp2/ctrl.h>
 #include <stdio.h>
@@ -7,6 +8,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <vita2d.h>
+#include <psp2/gxm.h>
 
 #include "offsets.h"
 #include "screen.h"
@@ -19,6 +22,10 @@
 #define MAX_MAPPING 256 // Assuming 1-byte values
 
 int numberLoops = 0;
+
+vita2d_pgf *pgf;
+vita2d_pvf *pvf;
+vita2d_texture *image;
 
 void waitForButtonPress(SceCtrlButtons expectedButton) {
 	// Enable button input
@@ -49,6 +56,25 @@ void printStats(Digimon* digi) {
 
     getRandomEvolution(digi);
     printDigimonStats(digi);
+
+    vita2d_init();
+
+    pgf = vita2d_load_default_pgf();
+    pvf = vita2d_load_default_pvf();
+
+    /*
+    * Load the statically compiled image.png file.
+    */
+	image = vita2d_load_PNG_file("ux0:/app/VSDK00007/resources/Whamon.png");
+
+    vita2d_start_drawing();
+
+    vita2d_draw_texture_scale(image, 940/2, 544/2, 5.0f, 5.0f);
+
+    vita2d_end_drawing();
+    vita2d_swap_buffers();
+
+    sceKernelDelayThread(5*1000); // Wait for 3 seconds
 }
 
 int readFileToBuffer(char* path, unsigned char* buffer) {
@@ -77,6 +103,11 @@ int readFileToBuffer(char* path, unsigned char* buffer) {
 }
 
 int main() {
+
+    SceInt32 res = sceSysmoduleLoadModule(SCE_SYSMODULE_PGF);
+    if (res < 0) {
+        printf("uh oh");// Handle error
+    }
 
     // Set up the debug screen and print command so that 
     // we can print to the screen
@@ -122,6 +153,15 @@ int main() {
 
         printStats(digi);   
     }
+
+    /*
+    * vita2d_fini() waits until the GPU has finished rendering,
+    * then we can free the assets freely.
+    */
+    vita2d_fini();
+    vita2d_free_texture(image);
+    vita2d_free_pgf(pgf);
+    vita2d_free_pvf(pvf);
 
 	sceKernelDelayThread(0);
     return 0;

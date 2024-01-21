@@ -47,25 +47,8 @@ jobs:
           name: digislots-vita-build_${{ env.sha_name }}
           path: digislots_vita.vpk
           if-no-files-found: error
-      
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
 
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing its ID to get its outputs object
-          asset_path: ./digislots_vita.vpk
-          asset_name: digislots_vita.vpk
-          asset_content_type: application/octet-stream
+          files: digislots_vita.vpk

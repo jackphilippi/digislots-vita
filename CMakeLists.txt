@@ -41,9 +41,16 @@ link_directories(
   ${CMAKE_CURRENT_BINARY_DIR} # lets you use any library currently being built
 )
 
+## Add resources
+file(COPY
+  ${CMAKE_SOURCE_DIR}/resources/
+  DESTINATION ${CMAKE_BINARY_DIR}/sce_sys/livearea/contents/resources/
+)
+
 ## Build and link
 # Add all the files needed to compile here
 add_executable(${PROJECT_NAME}
+  ${vitatoolbox_res}
   src/main.c
   src/models/digimon.c
   src/save_mappings/ascii_m.c
@@ -55,14 +62,48 @@ add_executable(${PROJECT_NAME}
 
 # Library to link to (drop the -l prefix). This will mostly be stubs.
 target_link_libraries(${PROJECT_NAME}
-  SceLibKernel_stub # this line is only for demonstration. It's not needed as the most common stubs are automatically included.
-  SceDisplay_stub   # This used by debugScreenPrintf()
-  SceCtrl_stub
+  vita2d  
+  png # used by vita2d
+  SceAppMgr_stub # used by vita2d
+  SceAppUtil_stub
+  SceAudio_stub
+  SceAudiodec_stub
+  SceCommonDialog_stub # used by vita2d
+  SceCtrl_stub # for button presses etc
+  SceDisplay_stub # used by debugScreenPrintf()
+  SceGxm_stub # used by vita2d
+  SceHttp_stub
+  SceIme_stub
+  SceLibKernel_stub
+  SceMtpIfDriver_stub
+  SceMusicExport_stub
+  SceNet_stub
+  SceNetCtl_stub
+  ScePgf_stub
+  ScePvf_stub
+  ScePhotoExport_stub
+  ScePower_stub
+  ScePromoterUtil_stub
+  SceShellSvc_stub
+  SceSsl_stub
+  SceSysmodule_stub
+  SceTouch_stub
+  SceUdcd_stub
+  SceUsbstorVStorDriver_stub
+  SceVshBridge_stub
+  m # math
+  z # zlib
 )
 
 ## Create Vita files
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME}
   UNSAFE
+)
+
+## Add resources
+file(COPY
+  ${CMAKE_SOURCE_DIR}/resources/
+  DESTINATION ${CMAKE_BINARY_DIR}/sce_sys/livearea/contents/resources/
 )
 
 # The FILE directive lets you add additional files to the VPK, the syntax is
@@ -74,4 +115,5 @@ vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   FILE sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
   FILE sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
   FILE sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+  FILE ${CMAKE_BINARY_DIR}/src/resources resources # Add resources from the source directory to the VPK
 )

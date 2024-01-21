@@ -239,6 +239,7 @@ Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer) {
         .happiness = buffer[OFS_HAPPINESS],
         .battles = getPartnerValue(0x54, 0x55, buffer),
     };
+    return *digi;
 }
 
 void printDigimonStats(Digimon* digimon) {

@@ -2,6 +2,9 @@ name: Build package
 
 on: [ push, pull_request, workflow_dispatch ]
 
+permissions:
+  contents: write
+
 jobs:
   build_pkg:
     runs-on: ubuntu-20.04

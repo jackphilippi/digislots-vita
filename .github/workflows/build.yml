@@ -1,0 +1,45 @@
+name: Build package
+
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  build_pkg:
+    runs-on: ubuntu-20.04
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Checkout vdpm
+      uses: actions/checkout@v3
+      with:
+        repository: vitasdk/vdpm
+        path: vdpm
+
+    - name: Set env vars
+      run: |
+        echo "sha_name=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
+        echo "VITASDK=${GITHUB_WORKSPACE}/vitasdk" >> $GITHUB_ENV
+
+    # install latest vita sdk
+    - name: Download Vita SDK
+      working-directory: vdpm
+      run: |
+        ./bootstrap-vitasdk.sh
+
+    - name: Install SDK libraries
+      working-directory: vdpm
+      run: |
+        ./install-all.sh
+
+    - name: Build Apollo App Package
+      run: |
+        cmake .
+        make
+
+    - name: Push package artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: digislots-vita-build_${{ env.sha_name }}
+        path: digislots-vita.vpk
+        if-no-files-found: error

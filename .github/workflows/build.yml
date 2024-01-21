@@ -32,7 +32,12 @@ jobs:
       run: |
         ./install-all.sh
 
-    - name: Build Apollo App Package
+    - name: Clear CMake Cache
+      run: |
+        rm -rf CMakeCache.txt
+        rm -rf CMakeFiles/
+
+    - name: Build Digislots Vita Package
       run: |
         cmake .
         make

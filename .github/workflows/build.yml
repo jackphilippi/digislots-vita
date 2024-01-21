@@ -6,45 +6,66 @@ jobs:
   build_pkg:
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout vdpm
+        uses: actions/checkout@v3
+        with:
+          repository: vitasdk/vdpm
+          path: vdpm
 
-    - name: Checkout vdpm
-      uses: actions/checkout@v3
-      with:
-        repository: vitasdk/vdpm
-        path: vdpm
+      - name: Set env vars
+        run: |
+          echo "sha_name=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
+          echo "VITASDK=${GITHUB_WORKSPACE}/vitasdk" >> $GITHUB_ENV
 
-    - name: Set env vars
-      run: |
-        echo "sha_name=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
-        echo "VITASDK=${GITHUB_WORKSPACE}/vitasdk" >> $GITHUB_ENV
+      # install latest vita sdk
+      - name: Download Vita SDK
+        working-directory: vdpm
+        run: |
+          ./bootstrap-vitasdk.sh
 
-    # install latest vita sdk
-    - name: Download Vita SDK
-      working-directory: vdpm
-      run: |
-        ./bootstrap-vitasdk.sh
+      - name: Install SDK libraries
+        working-directory: vdpm
+        run: |
+          ./install-all.sh
 
-    - name: Install SDK libraries
-      working-directory: vdpm
-      run: |
-        ./install-all.sh
+      - name: Clear CMake Cache
+        run: |
+          rm -rf CMakeCache.txt
+          rm -rf CMakeFiles/
 
-    - name: Clear CMake Cache
-      run: |
-        rm -rf CMakeCache.txt
-        rm -rf CMakeFiles/
+      - name: Build Digislots Vita Package
+        run: |
+          cmake .
+          make
 
-    - name: Build Digislots Vita Package
-      run: |
-        cmake .
-        make
+      - name: Push package artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: digislots-vita-build_${{ env.sha_name }}
+          path: digislots_vita.vpk
+          if-no-files-found: error
+      
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
-    - name: Push package artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: digislots-vita-build_${{ env.sha_name }}
-        path: digislots_vita.vpk
-        if-no-files-found: error
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing its ID to get its outputs object
+          asset_path: ./digislots_vita.vpk
+          asset_name: digislots_vita.vpk
+          asset_content_type: application/octet-stream

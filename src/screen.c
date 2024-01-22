@@ -16,6 +16,9 @@ int print(const char *format, ...) {
 	int ret = vsnprintf(buf, sizeof(buf), format, opt);
 	psvDebugScreenPuts(buf);
 	va_end(opt);
+	
+	psvDebugScreenSetFgColor(0xFFFFFFFF);
+	psvDebugScreenSetBgColor(0x00000000);
 
 	return ret;
 }

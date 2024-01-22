@@ -20,6 +20,8 @@
 
 int numberLoops = 0;
 
+Digimon* randomEvo = NULL;
+
 void waitForButtonPress(SceCtrlButtons expectedButton) {
 	// Enable button input
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_DIGITAL);
@@ -47,8 +49,10 @@ void printStats(Digimon* digi) {
     // Print screen title
     print("Fippi's Digimon Slots for Vita! [%d]\n\n", numberLoops);
 
-    getRandomEvolution(digi);
     printDigimonStats(digi);
+
+    randomEvo = getRandomEvolution(digi);
+    printEvolutionRequirements(digi, randomEvo);
 }
 
 int readFileToBuffer(char* path, unsigned char* buffer) {
@@ -83,7 +87,7 @@ int main() {
     setupScreen();
 
     // TODO: Make this configurable
-	char path[] = "ux0:/pspemu/PSP/SAVEDATA/SLUS01032/SCEVMC1.VMP"; // SCEVMC0 = Phoenixmon, SCEVMC1 = Kokatorimon, SCEVMC2 = Digitamamon
+	char path[] = "ux0:/pspemu/PSP/SAVEDATA/SLUS01032/SCEVMC0.VMP"; // SCEVMC0 = Phoenixmon, SCEVMC1 = Kokatorimon, SCEVMC2 = Digitamamon
 	unsigned char buffer[BUFFER_SIZE];
 
     print("Fippi's Digimon Slots for Vita!\n\n");
@@ -116,7 +120,7 @@ int main() {
         // Set the seed for RNG
         srand(time(NULL));
 
-        print("Press CROSS to start\n\n");
+        print("Press CROSS to continue\n\n");
 
         waitForButtonPress(SCE_CTRL_CROSS);
 

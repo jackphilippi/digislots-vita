@@ -1,6 +1,8 @@
 #ifndef DIGIMON_H_
 #define DIGIMON_H_
 
+#include <stdbool.h>
+
 typedef enum {
     Fresh,
     InTraining,
@@ -82,13 +84,13 @@ char* getNameFromByteId(unsigned int searchId);
 
 void printDigimonStats(Digimon* digimon);
 
+void printEvolutionRequirements(Digimon* digimon, Digimon* randomEvo);
+
 bool isSpecialEvolution(Digimon* digi);
 
 int getStatValue(int highByte, int lowByte, unsigned char* buffer);
 
 int getPartnerValue(int highByte, int lowByte, unsigned char* buffer);
-
-Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer);
 
 /**
  * Retrieves each of the stat values from the buffer
@@ -96,6 +98,12 @@ Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer);
  * 
  * @param digi - the digimon to update with the stats
  * @param buffer - the buffer containing the PS1 save file
+*/
+Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer);
+
+/**
+ * Generates a random evolution for the given digimon
+ * mutates the second parameter
 */
 Digimon* getRandomEvolution(Digimon* digi);
 

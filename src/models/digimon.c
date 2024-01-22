@@ -188,8 +188,17 @@ char* getNameFromByteId(unsigned int searchId) {
     return (char*)digimonName;
 }
 
+/**
+ * Returns true if the digimon is a special evolution
+ * Only includes special evolutions that can't be achieved regularly
+*/
 bool isSpecialEvolution(Digimon* digi) {
-    return strcmp(digi->name, "Sukamon") == 0 || strcmp(digi->name, "Numemon") == 0 || strcmp(digi->name, "Vademon") == 0;
+    return strcmp(digi->name, "Sukamon") == 0
+        || strcmp(digi->name, "Numemon") == 0
+        || strcmp(digi->name, "Vademon") == 0
+        || strcmp(digi->name, "Devimon") == 0
+        || strcmp(digi->name, "Nanimon") == 0
+        || strcmp(digi->name, "Kunemon") == 0;
 }
 
 int getStatValue(int highByte, int lowByte, unsigned char* buffer) {
@@ -201,25 +210,23 @@ int getPartnerValue(int highByte, int lowByte, unsigned char* buffer) {
 }
 
 Digimon* getRandomEvolution(Digimon* digi) {
-    // First remove any records that are special evolutions (TODO: make this configurable later)
     Digimon* nonSpecial[digi->evolutionPathSize];
     int filteredSize = 0;
     for (int i = 0; i < digi->evolutionPathSize; i++) {
-        if (!isSpecialEvolution(digi->evolutionPath[i])) {
-            nonSpecial[filteredSize++] = digi->evolutionPath[i];
+        // Skip if it's a special evolution (TODO: make this configurable later)
+        if (isSpecialEvolution(digi->evolutionPath[i])) {
+            continue;
         }
+        // TODO: Don't return the same digimon that's already been rolled
+        nonSpecial[filteredSize++] = digi->evolutionPath[i];
+    }
+
+    if (filteredSize == 0) {
+        return NULL;
     }
 
     int randomNumber = rand() % filteredSize;
-    Digimon* randomDigi = nonSpecial[randomNumber];
-
-    if (randomDigi == NULL) {
-        print("No available evolutions.");
-        return NULL;
-    } else {
-        print("Picked random evolution: %s\n\n", randomDigi->name);
-        return randomDigi;
-    }
+    return nonSpecial[randomNumber];
 }
 
 Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer) {
@@ -244,22 +251,7 @@ Digimon setDigimonStatsFromBuffer(Digimon* digi, unsigned char* buffer) {
 
 void printDigimonStats(Digimon* digimon) {
     // Print all of botamon's data
-    print("%s\n\n", digimon->name);
-
-    // Show a digimon's evolution requirements
-    // print("HP: %i\n", digimon->req.hp);
-    // print("Attack: %i\n", digimon->req.offense);
-    // print("Defense: %i\n", digimon->req.defense);
-    // print("Speed: %i\n", digimon->req.speed);
-    // print("Brains: %i\n", digimon->req.brains);
-    // print("Care: %i\n", digimon->req.care);
-    // print("Weight: %i\n", digimon->req.weight);
-    // print("Discipline: %i\n", digimon->req.discipline);
-    // print("Happiness: %i\n\n", digimon->req.happiness);
-    // print("Battles: %i\n", digimon->req.battles);
-    // print("Tech: %i\n\n", digimon->req.techs);
-    // print("MinCare: %i\n", digimon->req.minCare);
-    // print("MinBattles: %i\n\n", digimon->req.minBattles);
+    print(">> Current Digimon: %s <<\n\n", digimon->name);
 
     // Show digimon's stats
     print("HP: %d\n", digimon->stats.hp);
@@ -272,14 +264,143 @@ void printDigimonStats(Digimon* digimon) {
     print("Weight: %d\n", digimon->stats.weight);
     print("Discipline: %d\n", digimon->stats.discipline);
     print("Happiness: %d\n\n", digimon->stats.happiness);
-    print("Battles: %d\n", digimon->stats.battles);
-    print("Tech: TODO\n\n"); // , digimon->stats.techs);
+    print("Battles: %d\n\n", digimon->stats.battles);
+    print("Tech: TODO\n\n"); // TODO: techs are stored in a bitfield. need to decode them // , digimon->stats.techs);
 
-    print("%d evolutions: %s\n\n", digimon->evolutionPathSize, getEvolutionNameStrings(digimon));
+    print("%d possible evolutions: %s\n\n", digimon->evolutionPathSize, getEvolutionNameStrings(digimon));
+}
 
-    if (digimon->digimonBonus != NULL) {
-        print("Bonus digimon: %s", digimon->digimonBonus->name);
+void printEvolutionRequirements(Digimon* currDigi, Digimon* randomEvo) {
+	// printf("\e[31m"     "A Red text ");
+    // printf("\e[32m",     "A Green text ");
+    // printf("\e[33m"     "A Yellow text ");
+    // printf("\e[34m"     "A Blue text ");
+    // printf("\e[35m"     "A Magenta text ");
+	// printf("\e[m"       "default\n"); 
+    if (randomEvo == NULL) {
+        print("There are no non-special evolutions available for %s.\n\n", currDigi->name);
+        return;
     }
+    
+    print(">> Requirements to evolve into %s <<\n\n", randomEvo->name);
+
+    if (randomEvo->req.hp > 0) {
+        print("HP: ");
+        if (currDigi->stats.hp > randomEvo->req.hp) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.hp);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.hp);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.hp);
+    }
+
+    if (randomEvo->req.mp > 0) {
+        print("MP: ");
+        if (currDigi->stats.mp > randomEvo->req.mp) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.mp);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.mp);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.mp);
+    }
+
+    if (randomEvo->req.offense > 0) {
+        print("Offense: ");
+        if (currDigi->stats.offense > randomEvo->req.offense) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.offense);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.offense);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.offense);
+    }
+
+    if (randomEvo->req.defense > 0) {
+        print("Defense: ");
+        if (currDigi->stats.defense > randomEvo->req.defense) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.defense);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.defense);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.defense);
+    }
+
+    if (randomEvo->req.speed > 0) {
+        print("Speed: ");
+        if (currDigi->stats.speed > randomEvo->req.speed) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.speed);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.speed);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.speed);
+    }
+
+    if (randomEvo->req.brains > 0) {
+        print("Brains: ");
+        if (currDigi->stats.brains > randomEvo->req.brains) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.brains);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.brains);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.brains);
+    }
+
+    // TODO: This needs to discern min care mistakes vs max care mistakes
+    if (randomEvo->req.care > 0) {
+        print("Care Mistakes: ");
+        if (currDigi->stats.care > randomEvo->req.care) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.care);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.care);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.care);
+    }
+
+    if (randomEvo->req.weight > 0) {
+        print("Weight: ");
+        if (currDigi->stats.weight > randomEvo->req.weight) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.weight);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.weight);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.weight);
+    }
+
+    if (randomEvo->req.discipline > 0) {
+        print("Discipline: ");
+        if (currDigi->stats.discipline > randomEvo->req.discipline) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.discipline);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.discipline);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.discipline);
+    }
+
+    if (randomEvo->req.happiness > 0) {
+        print("Happiness: ");
+        if (currDigi->stats.happiness > randomEvo->req.happiness) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.happiness);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.happiness);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.happiness);
+    }
+
+    // TODO: This needs to discern min battles vs max battles
+    if (randomEvo->req.battles > 0) {
+        print("Battles: ");
+        if (currDigi->stats.battles > randomEvo->req.battles) {
+            print("\e[32m" "\e[16G" "%i", randomEvo->req.battles);
+        } else {
+            print("\e[31m" "\e[16G" "%i", randomEvo->req.battles);
+        }
+        print("\e[22G" "(%i)\n", currDigi->stats.battles);
+    }
+
+    if (randomEvo->digimonBonus != NULL) {
+        print("Bonus: %s\n", randomEvo->digimonBonus->name);
+    }
+
+    print("\e[m" "\n\n");
 }
 
 void initDigimon(

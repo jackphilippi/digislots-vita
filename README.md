@@ -21,6 +21,7 @@ If all is well, the `.vpk` should be compiled and will be in the root of the rep
 ## TODO
 - [ ] Display digi's current age & time until next digivolution
 - [ ] Read the learned techs from the PSX save. I don't know how this works at the moment and need to do some investigation
+- [ ] Add option to exclude digimon that you've already had (i.e. that exist in the tree already)
 - [ ] Implement min/max battles / care mistakes. Currently it parses all requirements as if they're minimum requirements
 - [ ] Make save file & path configurable
 - [ ] Add configurable options for app similar to the web app
